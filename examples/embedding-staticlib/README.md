@@ -1,7 +1,7 @@
 Embedding / Cross-Compiling MicroPython as a Static Library
 ===========================================================
 
-This directory contains instructions on how to build MicroPython as a static library (`.a` archive) that can easily be *linked* into an *external* C or C++ application, including for cross-compiled target platforms that support static libraries.
+This directory contains instructions on how to build MicroPython as a static library (`.a` archive) that can easily be *linked* into an *external* C or C++ application, including for cross-compiled target platforms that support static libraries. Using a pre-built static library avoids copying or duplicating the MicroPython sources into the consuming project.
 
 CMake is the standard build tool for many Arduino-based boards. For example, the ESP-IDF framework provides a high-quality, CMake-based cross-compilation environment and toolchain that can be integrated easily into another build system.
 
