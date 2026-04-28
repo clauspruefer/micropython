@@ -47,7 +47,7 @@ Cross-Compiling
 
 CMake can be adjusted to use a different compiler toolchain easily (using GNU make is a torture) by providing a simple external toolchain config file with the `-DCMAKE_TOOLCHAIN_FILE=settings.cmake`. This example provides `riscv32-cross.cmake` which uses the current release (v6.0.1) of Espressif ESP-IDF with pre-selected RISC-V32 (ESP32-C3) toolchain.
 
-> [!INFO]
+> [!NOTE]
 > Change the toolchain / paths in this file to adjust settings.
 
 ```bash
@@ -61,3 +61,9 @@ This will compile the `libmicropython.a` static library for the selected archite
 make install
 ```
 
+The previous command installs the library **and** the MicroPython C header files in the following locations:
+
+1. Library: `/usr/local/lib/esp32c3/libmicropython.a`
+2. Header: `/usr/local/include/esp32c3/micropython_embed.h`
+
+Howto integrate the static library into an ESP-IDF C++ project can be found here: https://github.com/WEBcodeX1/micropython-as.
