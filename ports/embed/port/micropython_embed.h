@@ -26,6 +26,7 @@
 #ifndef MICROPY_INCLUDED_MICROPYTHON_EMBED_H
 #define MICROPY_INCLUDED_MICROPYTHON_EMBED_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -34,8 +35,11 @@ void mp_embed_deinit(void);
 
 // Only available if MICROPY_ENABLE_COMPILER is enabled.
 void mp_embed_exec_str(const char *src);
-// Returns a newly allocated string (caller must free() it), or NULL on error.
-const char *mp_embed_exec_string_function(const char *src, const char *function_name, const char *param1_value);
+// Calls the named function with param1_value and copies the string result into
+// result_buf (at most result_buf_size-1 characters, always null-terminated).
+// Uses no dynamic allocation — safe on bare-metal targets without a system malloc.
+// Returns true on success, false if an exception was raised or the result is not a string.
+bool mp_embed_exec_string_function(const char *src, const char *function_name, const char *param1_value, char *result_buf, size_t result_buf_size);
 
 // Only available if MICROPY_PERSISTENT_CODE_LOAD is enabled.
 void mp_embed_exec_mpy(const uint8_t *mpy, size_t len);

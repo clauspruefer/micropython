@@ -59,11 +59,13 @@ void mp_embed_exec_str(const char *src) {
 }
 
 // Compile the given source script, call a named function with one string argument,
-// and return the function's string return value as a newly allocated C string.
-// The caller is responsible for freeing the returned string with free().
-// Returns NULL if an exception is raised or the result is not a string.
-const char *mp_embed_exec_string_function(const char *src, const char *function_name, const char *param1_value) {
-    const char *result = NULL;
+// and copy the function's string return value into result_buf (null-terminated,
+// truncated to result_buf_size - 1 characters if necessary).
+// Uses only memcpy — no dynamic allocation — so it works on bare-metal targets
+// that do not provide a system malloc (e.g. ESP32-C3 with picolibc).
+// Returns true on success, false if an exception is raised or the result is not a string.
+bool mp_embed_exec_string_function(const char *src, const char *function_name, const char *param1_value, char *result_buf, size_t result_buf_size) {
+    bool success = false;
     nlr_buf_t nlr;
     if (nlr_push(&nlr) == 0) {
         // Compile, parse and execute the source to populate globals with defined functions.
@@ -80,13 +82,20 @@ const char *mp_embed_exec_string_function(const char *src, const char *function_
         mp_obj_t arg = mp_obj_new_str(param1_value, strlen(param1_value));
         mp_obj_t ret = mp_call_function_1(fn, arg);
 
-        // Duplicate the returned string into heap-independent memory so the caller
-        // is not affected by MicroPython garbage collection.
+        // Copy the returned string into the caller-provided buffer.
+        // This avoids any dynamic allocation and keeps the result off the GC heap.
         if (!mp_obj_is_str(ret)) {
             mp_obj_print_exception(&mp_plat_print, mp_obj_new_exception_msg(&mp_type_TypeError,
                 MP_ERROR_TEXT("return value is not a string")));
         } else {
-            result = strdup(mp_obj_str_get_str(ret));
+            size_t len;
+            const char *str = mp_obj_str_get_data(ret, &len);
+            if (len >= result_buf_size) {
+                len = result_buf_size - 1;
+            }
+            memcpy(result_buf, str, len);
+            result_buf[len] = '\0';
+            success = true;
         }
 
         nlr_pop();
@@ -94,7 +103,7 @@ const char *mp_embed_exec_string_function(const char *src, const char *function_
         // Uncaught exception: print it out.
         mp_obj_print_exception(&mp_plat_print, (mp_obj_t)nlr.ret_val);
     }
-    return result;
+    return success;
 }
 #endif
 
