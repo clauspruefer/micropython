@@ -62,8 +62,9 @@ int main() {
 
     // Run example 3: call myfunction(jsonstring) and print the result.
     // The buffer must be large enough to hold the returned JSON string.
+    mp_embed_exec_str(example_3);
     char result[256];
-    if (mp_embed_exec_string_function(example_3, "myfunction", example_3_function_string, result, sizeof(result))) {
+    if (mp_embed_exec_string_function("myfunction", example_3_function_string, result, sizeof(result))) {
         printf("example 3 result: %s\n", result);
     }
 
