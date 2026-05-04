@@ -59,7 +59,8 @@ void mp_embed_exec_str(const char *src) {
 }
 
 // Compile the given source script, call a named function with one string argument,
-// and return the function's string return value as a C string.
+// and return the function's string return value as a newly allocated C string.
+// The caller is responsible for freeing the returned string with free().
 // Returns NULL if an exception is raised or the result is not a string.
 const char *mp_embed_exec_string_function(const char *src, const char *function_name, const char *param1_value) {
     const char *result = NULL;
@@ -79,14 +80,13 @@ const char *mp_embed_exec_string_function(const char *src, const char *function_
         mp_obj_t arg = mp_obj_new_str(param1_value, strlen(param1_value));
         mp_obj_t ret = mp_call_function_1(fn, arg);
 
-        // Extract the null-terminated C string from the returned MicroPython string object.
-        // The pointer is valid for the lifetime of the MicroPython heap; copy it if longer
-        // lifetime is required.
+        // Duplicate the returned string into heap-independent memory so the caller
+        // is not affected by MicroPython garbage collection.
         if (!mp_obj_is_str(ret)) {
             mp_obj_print_exception(&mp_plat_print, mp_obj_new_exception_msg(&mp_type_TypeError,
                 MP_ERROR_TEXT("return value is not a string")));
         } else {
-            result = mp_obj_str_get_str(ret);
+            result = strdup(mp_obj_str_get_str(ret));
         }
 
         nlr_pop();
