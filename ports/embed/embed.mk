@@ -13,6 +13,9 @@ include $(MICROPYTHON_TOP)/py/mkenv.mk
 # Include py core make definitions.
 include $(TOP)/py/py.mk
 
+# Add extmod sources that are included in the embed package to the qstr scan.
+SRC_QSTR += $(TOP)/extmod/modjson.c
+
 # Set the location of the MicroPython embed port.
 MICROPYTHON_EMBED_PORT = $(MICROPYTHON_TOP)/ports/embed
 
@@ -53,6 +56,7 @@ micropython-embed-package: $(GENHDR_OUTPUT)
 	$(Q)$(CP) $(TOP)/py/*.[ch] $(PACKAGE_DIR)/py
 	$(ECHO) "- extmod"
 	$(Q)$(CP) $(TOP)/extmod/modplatform.h $(PACKAGE_DIR)/extmod
+	$(Q)$(CP) $(TOP)/extmod/modjson.c $(PACKAGE_DIR)/extmod
 	$(ECHO) "- shared"
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper.h $(PACKAGE_DIR)/shared/runtime
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper_generic.c $(PACKAGE_DIR)/shared/runtime
