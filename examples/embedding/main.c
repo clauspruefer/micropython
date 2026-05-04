@@ -3,6 +3,7 @@
  * Copyright (c) 2022-2023 Damien P. George
  */
 
+#include <stdio.h>
 #include "port/micropython_embed.h"
 
 // This is example 1 script, which will be compiled and executed.
@@ -26,6 +27,21 @@ static const char *example_2 =
     "print('finish')\n"
     ;
 
+// This is example 3 script, which will be compiled, executed and myfunction called
+// with a JSON string parameter. The function parses it, adds a key, and returns the result.
+static const char *example_3 =
+    "import json\n"
+    "\n"
+    "def myfunction(jsonstring):\n"
+    "    r = json.loads(jsonstring)\n"
+    "    r['payload2'] = 'test2'\n"
+    "    return json.dumps(r)\n"
+    "\n"
+    ;
+
+// Input JSON string passed to example 3's myfunction.
+static const char *example_3_function_string = "{ \"payload\": \"test\" }";
+
 // This array is the MicroPython GC heap.
 static char heap[8 * 1024];
 
@@ -43,6 +59,13 @@ int main() {
     // Run the example scripts (they will be compiled first).
     mp_embed_exec_str(example_1);
     mp_embed_exec_str(example_2);
+
+    // Run example 3: call myfunction(jsonstring) and print the result.
+    // The buffer must be large enough to hold the returned JSON string.
+    char result[256];
+    if (mp_embed_exec_string_function(example_3, "myfunction", example_3_function_string, result, sizeof(result))) {
+        printf("example 3 result: %s\n", result);
+    }
 
     // Deinitialise MicroPython.
     mp_embed_deinit();

@@ -25,9 +25,19 @@
  */
 
 #include <stdio.h>
+#include "py/mperrno.h"
 #include "py/mphal.h"
+#include "py/runtime.h"
 
 // Send string of given length to stdout, converting \n to \r\n.
 void mp_hal_stdout_tx_strn_cooked(const char *str, size_t len) {
     printf("%.*s", (int)len, str);
 }
+
+#if MICROPY_PY_IO
+// The embed port has no filesystem; open() always raises OSError(ENOENT).
+mp_obj_t mp_builtin_open(size_t n_args, const mp_obj_t *args, mp_map_t *kwargs) {
+    mp_raise_OSError(MP_ENOENT);
+}
+MP_DEFINE_CONST_FUN_OBJ_KW(mp_builtin_open_obj, 1, mp_builtin_open);
+#endif

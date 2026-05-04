@@ -13,3 +13,6 @@
 #define MICROPY_ENABLE_COMPILER                 (1)
 #define MICROPY_ENABLE_GC                       (1)
 #define MICROPY_PY_GC                           (1)
+#define MICROPY_PY_SYS                          (0)
+#define MICROPY_PY_IO                           (1)
+#define MICROPY_PY_JSON                         (1)
