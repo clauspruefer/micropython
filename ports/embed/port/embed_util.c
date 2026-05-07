@@ -60,6 +60,9 @@ void mp_embed_exec_str(const char *src) {
 
 // Call a Python function with a single string argument and return the result
 // as a C string, or NULL if the call fails or the result is not a string.
+// All exceptions raised during function lookup or execution (including
+// NameError if func_name is not found) are caught, printed, and NULL is
+// returned.
 const char *mp_embed_exec_string_function(const char *func_name, const char *arg) {
     nlr_buf_t nlr;
     if (nlr_push(&nlr) == 0) {

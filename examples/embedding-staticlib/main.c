@@ -44,6 +44,8 @@ int main() {
     const char *result = mp_embed_exec_string_function("myfunction", example_4_function_string);
     if (result) {
         printf("example 4 result: %s\n", result);
+    } else {
+        printf("example 4 failed: function not found or returned non-string value\n");
     }
 
     // Deinitialise MicroPython.
