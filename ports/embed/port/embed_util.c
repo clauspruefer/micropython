@@ -57,6 +57,26 @@ void mp_embed_exec_str(const char *src) {
         mp_obj_print_exception(&mp_plat_print, (mp_obj_t)nlr.ret_val);
     }
 }
+
+// Call a Python function with a single string argument and return the result
+// as a C string, or NULL if the call fails or the result is not a string.
+const char *mp_embed_exec_string_function(const char *func_name, const char *arg) {
+    nlr_buf_t nlr;
+    if (nlr_push(&nlr) == 0) {
+        mp_obj_t func = mp_load_global(qstr_from_str(func_name));
+        mp_obj_t arg_obj = mp_obj_new_str(arg, strlen(arg));
+        mp_obj_t result = mp_call_function_1(func, arg_obj);
+        nlr_pop();
+        if (mp_obj_is_str(result)) {
+            return mp_obj_str_get_str(result);
+        }
+        return NULL;
+    } else {
+        // Uncaught exception: print it out.
+        mp_obj_print_exception(&mp_plat_print, (mp_obj_t)nlr.ret_val);
+        return NULL;
+    }
+}
 #endif
 
 #if MICROPY_PERSISTENT_CODE_LOAD

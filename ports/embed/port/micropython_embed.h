@@ -35,6 +35,13 @@ void mp_embed_deinit(void);
 // Only available if MICROPY_ENABLE_COMPILER is enabled.
 void mp_embed_exec_str(const char *src);
 
+// Call a Python function (previously defined via mp_embed_exec_str) with a
+// single string argument and return the result as a C string.
+// Returns NULL if the function is not found, raises an exception, or the
+// return value is not a string.
+// Only available if MICROPY_ENABLE_COMPILER is enabled.
+const char *mp_embed_exec_string_function(const char *func_name, const char *arg);
+
 // Only available if MICROPY_PERSISTENT_CODE_LOAD is enabled.
 void mp_embed_exec_mpy(const uint8_t *mpy, size_t len);
 
