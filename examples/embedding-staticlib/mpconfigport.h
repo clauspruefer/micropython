@@ -16,3 +16,5 @@
 #define MICROPY_PY_SYS                          (0)
 #define MICROPY_PY_IO                           (1)
 #define MICROPY_PY_JSON                         (1)
+
+#define NDEBUG                                  (1) 
