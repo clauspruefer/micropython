@@ -55,4 +55,4 @@ target_compile_options(embed_staticlib PRIVATE
     -Wall
 )
 
-target_link_libraries(embed_staticlib micropython)
+target_link_libraries(embed_staticlib micropython m)

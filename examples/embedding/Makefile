@@ -19,7 +19,7 @@ SRC += $(wildcard $(EMBED_DIR)/*/*.c) $(wildcard $(EMBED_DIR)/*/*/*.c)
 OBJ += $(SRC:.c=.o)
 
 $(PROG): $(OBJ)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ -lm
 
 clean:
 	/bin/rm -f $(OBJ) $(PROG)
