@@ -48,7 +48,7 @@ clean-micropython-embed-package:
 	$(RM) -rf $(PACKAGE_DIR)
 
 PACKAGE_DIR ?= micropython_embed
-PACKAGE_DIR_LIST = $(addprefix $(PACKAGE_DIR)/,py extmod shared/runtime genhdr port)
+PACKAGE_DIR_LIST = $(addprefix $(PACKAGE_DIR)/,py extmod shared/runtime genhdr port lib/libm_dbl)
 
 .PHONY: micropython-embed-package
 micropython-embed-package: $(GENHDR_OUTPUT)
@@ -66,6 +66,8 @@ micropython-embed-package: $(GENHDR_OUTPUT)
 	$(ECHO) "- shared"
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper.h $(PACKAGE_DIR)/shared/runtime
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper_generic.c $(PACKAGE_DIR)/shared/runtime
+	$(ECHO) "- lib/libm_dbl"
+	$(Q)$(CP) $(TOP)/lib/libm_dbl/*.[ch] $(PACKAGE_DIR)/lib/libm_dbl
 	$(ECHO) "- genhdr"
 	$(Q)$(CP) $(GENHDR_OUTPUT) $(PACKAGE_DIR)/genhdr
 	$(ECHO) "- port"
