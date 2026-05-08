@@ -23,6 +23,21 @@ MICROPY_ROM_TEXT_COMPRESSION ?= 0
 CFLAGS += -I. -I$(TOP) -I$(BUILD) -I$(MICROPYTHON_EMBED_PORT)
 CFLAGS += -Wall -Werror -std=c99
 
+# Extmod source files included in the embed package.
+# These are pure-software modules with no hardware-specific dependencies.
+# Projects may append additional extmod sources to this variable before
+# including this file if they need modules not listed here.
+EMBED_EXTMOD_SOURCES ?= \
+	extmod/modheapq.c \
+	extmod/modjson.c \
+	extmod/modplatform.c \
+	extmod/modrandom.c \
+	extmod/moductypes.c \
+
+# Add extmod sources to the QSTR scan so their MP_REGISTER_MODULE calls and
+# string constants are detected during the package generation step.
+SRC_QSTR += $(addprefix $(TOP)/,$(EMBED_EXTMOD_SOURCES))
+
 # Define the required generated header files.
 GENHDR_OUTPUT = $(addprefix $(BUILD)/genhdr/, \
 	moduledefs.h \
@@ -53,6 +68,7 @@ micropython-embed-package: $(GENHDR_OUTPUT)
 	$(Q)$(CP) $(TOP)/py/*.[ch] $(PACKAGE_DIR)/py
 	$(ECHO) "- extmod"
 	$(Q)$(CP) $(TOP)/extmod/modplatform.h $(PACKAGE_DIR)/extmod
+	$(Q)$(CP) $(addprefix $(TOP)/,$(EMBED_EXTMOD_SOURCES)) $(PACKAGE_DIR)/extmod
 	$(ECHO) "- shared"
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper.h $(PACKAGE_DIR)/shared/runtime
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper_generic.c $(PACKAGE_DIR)/shared/runtime
