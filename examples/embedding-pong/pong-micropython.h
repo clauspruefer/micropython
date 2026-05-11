@@ -316,12 +316,7 @@ static const char *arduino_pong_code =
     "    return _game.step(data, dt)\n"
     "\n"
     "def render_frame_no_dt(data):\n"
-    "    return _game.step(data, 0.05)\n"
-    "\n"
-    "r = render_frame('{ \"start\": \"multi\" }', 0.05)\n"
-    "r = render_frame('{ \"player1\": \"down\" }', 0.05)\n"
-    "print(r)\n"
-    "r = render_frame('{ \"player1\": \"down\" }', 0.05)\n"
-    "print(r)\n";
+    "    return _game.step(data, 0.03)\n"
+    "\n";
 
 #endif

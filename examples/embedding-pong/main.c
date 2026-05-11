@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "port/micropython_embed.h"
 #include "pong-micropython.h"
+#include "pong-debug.h"
 
 // This is example 1 script, which will be compiled and executed.
 static const char* example_1 =
@@ -59,20 +60,15 @@ static const char* example_4 =
     "print('testing math functions - end')\n"
     "\n";
 
+static const char* pong_parameter_start = "{ \"start\": \"multi\" }";
 static const char* pong_parameter_step1 = "{ \"player1\": \"down\" }";
-static const char* pong_parameter_step2 = "{ \"player2\": \"down\" }";
+static const char* pong_parameter_step2 = "{ \"player2\": \"up\" }";
 
 // This array is the MicroPython GC heap.
 static char heap[64 * 1024];
 
 int main() {
     // Initialise MicroPython.
-    //
-    // Note: &stack_top below should be good enough for many cases.
-    // However, depending on environment, there might be more appropriate
-    // ways to get the stack top value.
-    // eg. pthread_get_stackaddr_np, pthread_getattr_np,
-    // __builtin_frame_address/__builtin_stack_address, etc.
     int stack_top;
     mp_embed_init(&heap[0], sizeof(heap), &stack_top);
 
@@ -91,10 +87,19 @@ int main() {
 
     mp_embed_exec_str(arduino_pong_code);
 
-    result = mp_embed_exec_string_function("render_frame_no_dt", pong_parameter_step1);
+    result = mp_embed_exec_string_function("render_frame_no_dt", pong_parameter_start);
     if (result) { printf("pong result: %s\n", result); }
-    result = mp_embed_exec_string_function("render_frame_no_dt", pong_parameter_step2);
-    if (result) { printf("pong result: %s\n", result); }
+
+    for (int i = 0; i < 1000; i++) {
+        result = mp_embed_exec_string_function("render_frame_no_dt", pong_parameter_step1);
+        if (result) { printf("pong result: %s\n", result); }
+        render_pong_frame_str(result);
+        rpf_sleep_ms(30);
+        result = mp_embed_exec_string_function("render_frame_no_dt", pong_parameter_step2);
+        if (result) { printf("pong result: %s\n", result); }
+        render_pong_frame_str(result);
+        rpf_sleep_ms(30);
+    }
 
     // Deinitialise MicroPython.
     mp_embed_deinit();
