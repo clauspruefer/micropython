@@ -28,5 +28,6 @@ mp_obj_t mp_builtin_open(size_t n_args, const mp_obj_t *args, mp_map_t *kwargs) 
     (void)args;
     (void)kwargs;
     mp_raise_NotImplementedError(MP_ERROR_TEXT("open() is not supported in this example"));
+    return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_KW(mp_builtin_open_obj, 1, mp_builtin_open);
