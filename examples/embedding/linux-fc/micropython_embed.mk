@@ -22,4 +22,5 @@ include $(MICROPYTHON_TOP)/ports/embed/embed.mk
 all: micropython_embed/extmod/modjson.c
 
 micropython_embed/extmod/modjson.c: micropython-embed-package
+	$(MKDIR) -p $(dir $@)
 	$(CP) $(MICROPYTHON_TOP)/extmod/modjson.c $@
