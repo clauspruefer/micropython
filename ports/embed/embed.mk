@@ -19,6 +19,15 @@ MICROPYTHON_EMBED_PORT = $(MICROPYTHON_TOP)/ports/embed
 # Set default makefile-level MicroPython feature configurations.
 MICROPY_ROM_TEXT_COMPRESSION ?= 0
 
+# Include the source of extmod modules that are commonly needed (eg json, which
+# requires objstringio.c support already provided by the py core) so that their
+# qstrs are extracted and so the downstream project can build them.
+SRC_QSTR += extmod/modjson.c
+
+# Include the port's own source files so any qstrs they reference (eg for the
+# POSIX-backed `open()` implementation) are extracted too.
+SRC_QSTR += $(patsubst $(TOP)/%,%,$(wildcard $(TOP)/ports/embed/port/*.c))
+
 # Set CFLAGS for the MicroPython build.
 CFLAGS += -I. -I$(TOP) -I$(BUILD) -I$(MICROPYTHON_EMBED_PORT)
 CFLAGS += -Wall -Werror -std=c99
@@ -53,6 +62,7 @@ micropython-embed-package: $(GENHDR_OUTPUT)
 	$(Q)$(CP) $(TOP)/py/*.[ch] $(PACKAGE_DIR)/py
 	$(ECHO) "- extmod"
 	$(Q)$(CP) $(TOP)/extmod/modplatform.h $(PACKAGE_DIR)/extmod
+	$(Q)$(CP) $(TOP)/extmod/modjson.c $(PACKAGE_DIR)/extmod
 	$(ECHO) "- shared"
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper.h $(PACKAGE_DIR)/shared/runtime
 	$(Q)$(CP) $(TOP)/shared/runtime/gchelper_generic.c $(PACKAGE_DIR)/shared/runtime

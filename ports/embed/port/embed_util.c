@@ -40,6 +40,31 @@ void mp_embed_init(void *gc_heap, size_t gc_heap_size, void *stack_top) {
     mp_init();
 }
 
+#if MICROPY_EMBED_EXEC_STR_FUNCTION
+// Look up the given global function by name and call it with a single string
+// argument, returning the result as a string, or NULL if an exception was
+// raised or the function did not return a string.
+const char *mp_embed_exec_string_function(const char *function_name, const char *param1_value) {
+    const char *result = NULL;
+    nlr_buf_t nlr;
+    if (nlr_push(&nlr) == 0) {
+        qstr func_qstr = qstr_from_str(function_name);
+        mp_obj_t func = mp_load_global(func_qstr);
+        mp_obj_t arg = mp_obj_new_str(param1_value, strlen(param1_value));
+        mp_obj_t ret = mp_call_function_1(func, arg);
+        if (mp_obj_is_str(ret)) {
+            // Points directly into the GC heap; valid until the next GC allocation/collection.
+            result = mp_obj_str_get_str(ret);
+        }
+        nlr_pop();
+    } else {
+        // Uncaught exception: print it out.
+        mp_obj_print_exception(&mp_plat_print, (mp_obj_t)nlr.ret_val);
+    }
+    return result;
+}
+#endif
+
 #if MICROPY_ENABLE_COMPILER
 // Compile and execute the given source script (Python text).
 void mp_embed_exec_str(const char *src) {

@@ -38,4 +38,11 @@ void mp_embed_exec_str(const char *src);
 // Only available if MICROPY_PERSISTENT_CODE_LOAD is enabled.
 void mp_embed_exec_mpy(const uint8_t *mpy, size_t len);
 
+// Only available if MICROPY_EMBED_EXEC_STR_FUNCTION is enabled.
+// Compiles/executes the given source (if not already defined) then calls the
+// named global function with a single string argument, returning the result
+// as a string (a direct pointer into the GC heap, valid until the next GC
+// allocation/collection), or NULL if the function did not return a string.
+const char *mp_embed_exec_string_function(const char *function_name, const char *param1_value);
+
 #endif // MICROPY_INCLUDED_MICROPYTHON_EMBED_H
