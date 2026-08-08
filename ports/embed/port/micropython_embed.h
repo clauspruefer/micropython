@@ -38,4 +38,7 @@ void mp_embed_exec_str(const char *src);
 // Only available if MICROPY_PERSISTENT_CODE_LOAD is enabled.
 void mp_embed_exec_mpy(const uint8_t *mpy, size_t len);
 
+// Only available if MICROPY_EMBED_EXEC_STR_FUNCTION is enabled.
+const char *mp_embed_exec_string_function(const char *function_name, const char *param1_value);
+
 #endif // MICROPY_INCLUDED_MICROPYTHON_EMBED_H
