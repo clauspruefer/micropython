@@ -29,6 +29,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "py/mpconfig.h"
+
 void mp_embed_init(void *gc_heap, size_t gc_heap_size, void *stack_top);
 void mp_embed_deinit(void);
 
@@ -43,6 +45,8 @@ void mp_embed_exec_mpy(const uint8_t *mpy, size_t len);
 // named global function with a single string argument, returning the result
 // as a string (a direct pointer into the GC heap, valid until the next GC
 // allocation/collection), or NULL if the function did not return a string.
+#if MICROPY_EMBED_EXEC_STR_FUNCTION
 const char *mp_embed_exec_string_function(const char *function_name, const char *param1_value);
+#endif
 
 #endif // MICROPY_INCLUDED_MICROPYTHON_EMBED_H

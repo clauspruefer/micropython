@@ -37,5 +37,5 @@
 #define MICROPY_PY_MATH                         (1)
 #define MICROPY_FLOAT_IMPL                      (MICROPY_FLOAT_IMPL_FLOAT)
 
-// Enable C++ function API.
+// Enable the string-argument function-call API (mp_embed_exec_string_function).
 #define MICROPY_EMBED_EXEC_STR_FUNCTION         (1)
