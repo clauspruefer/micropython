@@ -2,11 +2,11 @@
 set(CMAKE_SYSTEM_NAME XTENSA32)
 
 # which compilers to use for C and C++
-set(CMAKE_C_COMPILER   [HOMEDIR]/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc)
-set(CMAKE_CXX_COMPILER [HOMEDIR]/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/bin/xtensa-esp32-elf-g++)
+set(CMAKE_C_COMPILER [HOMEDIR]/.espressif/tools/xtensa-esp-elf/[XTENSA_TOOLCHAIN_VERSION]/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc)
+set(CMAKE_CXX_COMPILER [HOMEDIR]/.espressif/tools/xtensa-esp-elf/[XTENSA_TOOLCHAIN_VERSION]/xtensa-esp-elf/bin/xtensa-esp32-elf-g++)
 
 # where is the target environment located
-set(CMAKE_FIND_ROOT_PATH [HOMEDIR]/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf)
+set(CMAKE_FIND_ROOT_PATH [HOMEDIR]/.espressif/tools/xtensa-esp-elf/[XTENSA_TOOLCHAIN_VERSION]/xtensa-esp-elf)
 
 # adjust the default behavior of the FIND_XXX() commands:
 # search programs in the host environment

@@ -12,12 +12,19 @@
 // MicroPython configuration.
 #define MICROPY_ENABLE_COMPILER                 (1)
 #define MICROPY_ENABLE_GC                       (1)
+#define MICROPY_PERSISTENT_CODE_LOAD            (1)
 
 // Enable Garbage Collector, IO and JSON modules.
 #define MICROPY_PY_GC                           (1)
-#define MICROPY_PY_SYS                          (0)
+
+#define MICROPY_PY_SYS                          (1)
+#define MICROPY_PY_SYS_PLATFORM                 "linux"
+
 #define MICROPY_PY_IO                           (1)
 #define MICROPY_PY_JSON                         (1)
+#define MICROPY_PY_MATH                         (1)
+
+#define MICROPY_FLOAT_IMPL                      (MICROPY_FLOAT_IMPL_FLOAT)
 
 // Enable C++ function API.
 #define MICROPY_EMBED_EXEC_STR_FUNCTION         (1)
