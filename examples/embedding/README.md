@@ -2,7 +2,7 @@
 
 This directory contains examples showing how to embed *MicroPython* in host applications.
 
-- [`linux/`](linux/) — A simple embedding example for a standalone C application.
+- [`linux/`](linux/) — A simple embedding example for a standalone Linux C application.
 - [`linux-fc/`](linux-fc/) — Demonstrates executing a MicroPython function directly from a C/C++ host application via a function-call API.
 - [`esp32/`](esp32/) — CMake-based cross-compilation utilizing the ESP-IDF framework's native cross-compiler toolchain (C/C++).
 
