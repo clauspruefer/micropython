@@ -15,11 +15,14 @@ CFLAGS += -I$(EMBED_DIR)/port
 CFLAGS += -Wall -Og -fno-common
 
 SRC += main.c
+SRC += linux_fc_stub.c
 SRC += $(wildcard $(EMBED_DIR)/*/*.c) $(wildcard $(EMBED_DIR)/*/*/*.c)
 OBJ += $(SRC:.c=.o)
 
+LDFLAGS += -lm
+
 $(PROG): $(OBJ)
-	$(CC) -no-pie -o $@ $^
+	$(CC) -no-pie -o $@ $(OBJ) $(LDFLAGS)
 
 clean:
 	/bin/rm -f $(OBJ) $(PROG)
