@@ -1,37 +1,57 @@
-Example of embedding MicroPython in a standalone C application
-==============================================================
+Example of embedding MicroPython in a C application
+===================================================
 
-This directory contains a simple example of how to embed MicroPython in an
-existing C application.
+This directory is the recommended starting point for embedding MicroPython in a
+host application. It shows the simplest end-to-end workflow: generate the
+embedding sources, compile them together with a small `main.c`, and run the
+resulting executable. It does **not** build a static library.
 
-A C application is represented here by the file `main.c`.  It executes two
-simple Python scripts which print things to the standard output.
+Contents
+--------
 
-Building the example
---------------------
+- [Directory layout](#directory-layout)
+- [Build and run](#build-and-run)
+- [Use from an out-of-tree project](#use-from-an-out-of-tree-project)
 
-First build the embed port using:
+Directory layout
+----------------
 
-    $ make -f micropython_embed.mk
+- `main.c` - minimal host application that initialises MicroPython and runs two
+  small Python snippets.
+- `mpconfigport.h` - MicroPython configuration used by this example.
+- `micropython_embed.mk` - helper makefile that generates the
+  `micropython_embed/` source tree.
+- `Makefile` - simple example build that compiles `main.c` together with the
+  generated `micropython_embed/` sources.
+- `micropython_embed/` - generated directory created by
+  `make -f micropython_embed.mk`.
 
-This will generate the `micropython_embed` directory which is a self-contained
-copy of MicroPython suitable for embedding.  The .c files in this directory need
-to be compiled into your project, in whatever way your project can do that.  The
-example here uses make and a provided `Makefile`.
+Build and run
+-------------
 
-To build the example project, based on `main.c`, use:
+1. Generate the embedding sources:
 
-    $ make
+       $ make -f micropython_embed.mk
 
-That will create an executable called `embed` which you can run:
+   This creates the `micropython_embed/` directory, which contains the
+   self-contained `.c` and `.h` files needed to embed MicroPython in your
+   project.
 
-    $ ./embed
+2. Build the example executable:
 
-Out of tree build
------------------
+       $ make
 
-This example is set up to work out of the box, being part of the MicroPython
-tree.  Your application will be outside of this tree, but the only thing you
-need to do for that is to change `MICROPYTHON_TOP` (found in `micropython_embed.mk`)
-to point to the location of the MicroPython repository.  The MicroPython
-repository may, for example, be a git submodule in your project.
+   This example makefile compiles `main.c` together with all generated sources
+   and produces an executable named `embed`.
+
+3. Run the example:
+
+       $ ./embed
+
+Use from an out-of-tree project
+--------------------------------
+
+This example works as-is inside the MicroPython source tree. For an external
+project, update `MICROPYTHON_TOP` in `micropython_embed.mk` so that it points to
+this repository. The generated `micropython_embed/` sources can then be built by
+whatever build system your project uses.
