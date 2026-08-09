@@ -15,10 +15,10 @@ linker scripts, bootloader, startup code, and RTOS integration are used as-is.
 This pattern is universally applicable to any SDK that supports *CMake*.
 
 By establishing this architecture, developers achieve **main-loop independent**
-MicroPython integration, allowing the host C/C++ application to maintain absolute
+*MicroPython* integration, allowing the host C/C++ application to maintain absolute
 control over the primary execution cycle. Furthermore, this foundation seamlessly
 supports the **Function-call Embedding** approach described below, enabling 
-fine-grained, direct C/C++ control over MicroPython execution on any 
+fine-grained, direct C/C++ control over *MicroPython* execution on any 
 microcontroller target.
 
 Currently, the `esp32` subdirectory serves as the initial example using the
@@ -31,7 +31,7 @@ for an overview and step-by-step build instructions.
 ## 2. Function-call Embedding (`linux-fc`)
 
 The `linux-fc` example shows how to use a *Boost.Python*-style **function-call API**
-which has been added recently to the MicroPython embed port. Enabling
+which has been added recently to the *MicroPython* embed port. Enabling
 `MICROPY_EMBED_EXEC_STR_FUNCTION` in `mpconfigport.h` exposes the
 `mp_embed_exec_string_function` function, which allows a C host to execute a
 named Python function with a string argument, and receive the return value back as
