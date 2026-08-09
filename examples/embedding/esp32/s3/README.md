@@ -45,9 +45,8 @@ git clone https://github.com/micropython/micropython.git
 
 ## Implementation Details
 
-In `mpconfigport.h` the following MicroPython constants are enabled:
-
-ESP32-S3 hardware-specific object representation and integer implementation are configured:
+In `mpconfigport.h` the following MicroPython constants are enabled. ESP32-S3 hardware-specific
+object representation and integer implementation are configured:
 
 - `MICROPY_OBJ_REPR` to `MICROPY_OBJ_REPR_A`
 - `MICROPY_LONGINT_IMPL` to `MICROPY_LONGINT_IMPL_MPZ`
@@ -101,7 +100,7 @@ The static library and the header file is installed here:
 - Header: `/usr/local/include/esp32s3/micropython_embed.h`
 
 > [!NOTE]
-> We insist of hardcoded paths despite other proposals to do this in user environment; if a path is fixed there are no misunderstandings
+> We insist on hardcoded paths despite other proposals to do this in user environment; if a path is fixed there are no misunderstandings
 > and a correct package managing system like apt / dpkg builds the installation layer: classical, approved, no-misunderstanding!
 
 ## ESP-IDF Project Integration
