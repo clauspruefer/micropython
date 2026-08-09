@@ -23,6 +23,15 @@ too large.
 A representative extract from `main.c`:
 
 ```c
+static const char *example_3 =
+    "import json\n"
+    "\n"
+    "def myfunction(jsonstring):\n"
+    "    r = json.loads(jsonstring)\n"
+    "    r['payload2'] = 'test2'\n"
+    "    return json.dumps(r)\n"
+    "\n"
+    ;
 mp_embed_exec_str(example_3);   // defines myfunction(jsonstring)
 const char *result = mp_embed_exec_string_function("myfunction", "{\"payload\":\"test\"}");
 printf("result: %s\n", result); // {"payload": "test", "payload2": "test2"}
