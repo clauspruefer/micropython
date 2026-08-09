@@ -10,7 +10,7 @@ into an ESP-IDF project targeting the ESP32-S3.
 ### Toolchain
 
 A recent GCC/G++ version is strongly advisable.  Using **gcc-14** and **g++-14**
-is recommended to benefit from the latest optimisations and standard-compliance
+is recommended to benefit from the latest optimizations and standard-compliance
 improvements.
 
 Install them on Debian/Ubuntu:
@@ -28,8 +28,8 @@ shell session.  The steps below use `~/esp/esp-idf` as the installation director
 adjust the path to suit your setup.
 
 ```bash
-# 1. Clone the ESP-IDF repository (use the release branch that matches your target):
-git clone --recursive https://github.com/espressif/esp-idf.git ~/esp/esp-idf
+# 1. Clone a stable ESP-IDF release (replace v5.3.2 with the latest stable tag):
+git clone --recursive --branch v5.3.2 https://github.com/espressif/esp-idf.git ~/esp/esp-idf
 cd ~/esp/esp-idf
 
 # 2. Run the installer – downloads the Xtensa/RISC-V toolchains and tools:
@@ -99,12 +99,24 @@ When integrating the MicroPython embed output into an ESP-IDF component, the
 
 ## Building the MicroPython Embed Package
 
-From the MicroPython repository root, generate the self-contained embed source
-package for your configuration:
+The embed build system looks for `mpconfigport.h` in the directory from which `make`
+is invoked (`-I.` is added to `CFLAGS` automatically).  The simplest approach is to
+run the build from a directory that already contains your `mpconfigport.h`:
 
 ```bash
+# Copy your mpconfigport.h into the examples/embedding directory (or a working copy):
+cp /path/to/your/mpconfigport.h /path/to/micropython/examples/embedding/
+
+# Generate the self-contained embed source package:
 cd /path/to/micropython/examples/embedding
 make -f micropython_embed.mk
+```
+
+If you prefer to keep `mpconfigport.h` in a separate directory, pass its location
+explicitly:
+
+```bash
+make -f micropython_embed.mk CFLAGS_EXTRA="-I/path/to/your/config"
 ```
 
 This produces the `micropython_embed/` directory containing all `.c` and `.h` files
