@@ -1,4 +1,4 @@
-## MicroPython Embedding — ESP32
+# MicroPython Embedding — ESP32
 
 This directory demonstrates how to run and embed the MicroPython interpreter with absolute **main-loop independence**
 within an *Espressif ESP-IDF* application. Instead of allowing *MicroPython* to seize the primary execution thread, the host
