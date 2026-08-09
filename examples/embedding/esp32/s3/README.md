@@ -98,7 +98,7 @@ The static library and the header file is installed here:
 > We insist on hardcoded paths despite other proposals to do this in user environment; if a path is fixed there are no misunderstandings
 > and a correct package managing system like apt / dpkg builds the installation layer: classical, approved, no-misunderstanding!
 
-## ESP-IDF Project Integration
+## ESP-IDF C++ Project Integration
 
 Once the static library is installed, integrating *MicroPython* into an ESP-IDF component requires
 two steps: linking the library in the component's `CMakeLists.txt` and exposing the C API to your
