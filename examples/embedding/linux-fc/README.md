@@ -4,7 +4,7 @@ This example demonstrates embedding MicroPython into a Linux host application
 and calling a Python function from C using the
 `mp_embed_exec_string_function` API.
 
-## Function-call API and Boost.Python comparison
+## Function-call API / Boost.Python Comparison
 
 Enabling `MICROPY_EMBED_EXEC_STR_FUNCTION` in `mpconfigport.h` exposes the
 `mp_embed_exec_string_function(name, arg)` function. This allows a C host to
@@ -38,7 +38,7 @@ const char *result = mp_embed_exec_string_function("myfunction", "{\"payload\":\
 printf("result: %s\n", result); // {"payload": "test", "payload2": "test2"}
 ```
 
-## Compiler settings and enabled modules
+## Compiler Settings / Enabled Modules
 
 The build links against `libm` (`-lm`) because `MICROPY_PY_MATH` and
 single-precision float parsing require it.  The default optimisation level is
@@ -51,7 +51,7 @@ The following MicroPython modules are enabled in `mpconfigport.h`:
 - `MICROPY_PY_GC` — garbage collector control (`gc` module).
 - `MICROPY_EMBED_EXEC_STR_FUNCTION` — C-to-Python function call API.
 
-## Pre-testing MicroPython code on Linux
+## Pre-testing MicroPython Code
 
 Because this example compiles to a native Linux executable, it provides a
 convenient way to develop and validate MicroPython application logic on a
@@ -60,7 +60,7 @@ The module set (`math`, `json`, `gc`) is kept deliberately close to the ESP32
 examples so that the same *Python* source can be reused across platforms with
 minimal changes to `mpconfigport.h`.
 
-## IO stub
+## IO Stub
 
 This example enables `MICROPY_PY_IO` but does not provide a real filesystem.
 `linux_fc_stub.c` supplies the three symbols that the MicroPython core
