@@ -44,6 +44,9 @@ git clone https://github.com/micropython/micropython.git
 ```
 
 ## Implementation Details
+
+The following hardware ...
+
 - `MICROPY_LONGINT_IMPL` to `MICROPY_LONGINT_IMPL_MPZ`
 
 MicroPython features enabled for this build:
