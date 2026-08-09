@@ -33,7 +33,7 @@ static const char *example_3 =
     "\n"
     ;
 
-mp_embed_exec_str(example_3);   // defines myfunction(jsonstring)
+mp_embed_exec_str(example_3);   // Defines myfunction(jsonstring).
 const char *result = mp_embed_exec_string_function("myfunction", "{\"payload\":\"test\"}");
 printf("result: %s\n", result); // {"payload": "test", "payload2": "test2"}
 ```
