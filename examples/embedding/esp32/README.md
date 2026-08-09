@@ -2,10 +2,9 @@
 
 This directory demonstrates how to run and embed the MicroPython interpreter with absolute **main-loop independence**
 within an *Espressif ESP-IDF* application. Instead of allowing *MicroPython* to seize the primary execution thread, the host
-C/C++ application retains complete control over the main loop.
-
-As a developer, you are fully responsible for initializing the interpreter instance, managing its lifecycle, and explicitly
-handling garbage collection (GC) or resource allocation within your native firmware loop. 
+C/C++ application retains complete control over the main loop. As a developer, you are fully responsible for initializing
+the interpreter instance, managing its lifecycle, and explicitly handling garbage collection (GC) or resource allocation within
+your native firmware loop. 
 
 Crucially, this architecture leverages MicroPython's C-API to invoke a single Python function directly from native C/C++ code.
 This allows the host application to pass parameters, trigger precise Python logic at runtime, and receive the execution result back
