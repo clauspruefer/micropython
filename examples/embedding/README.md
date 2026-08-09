@@ -1,49 +1,49 @@
 # MicroPython Embedding Examples
 
-This directory contains examples demonstrating how to embed MicroPython as a
-library into a host application.  The examples cover two complementary
-approaches.
+This directory contains examples that show how to embed MicroPython as a
+static library into a host application.  Two complementary approaches are
+covered.
 
-## Sub-directories
+## Function-call embedding (`linux-fc`)
 
-### `linux-fc/` — Function-call embedding on Linux
-
-Demonstrates the **Boost.Python-style function-call API** introduced by
-`MICROPY_EMBED_EXEC_STR_FUNCTION` / `mp_embed_exec_string_function`.  A C
-host compiles and executes a Python snippet, then calls a named Python
-function with a string argument and receives the return value back in C — all
-without a filesystem or REPL.  This example is ideal for pre-testing
-MicroPython code on Linux before deploying to a microcontroller.
+The `linux-fc` example demonstrates a Boost.Python-style function-call API
+built on top of the MicroPython embed port.  Enabling
+`MICROPY_EMBED_EXEC_STR_FUNCTION` in `mpconfigport.h` exposes
+`mp_embed_exec_string_function`, which allows a C host to compile and execute
+a Python snippet, call a named Python function with a string argument, and
+receive the return value back as a C string — all without a filesystem, REPL,
+or separate interpreter process.  This makes it straightforward to drive
+Python business logic from C in the same way that Boost.Python or pybind11
+allow calling Python from C++, but against a minimal, statically-linked
+runtime that is suitable for resource-constrained targets.
 
 See [`linux-fc/README.md`](linux-fc/README.md) for build instructions.
 
-### `esp32/` — Cross-compiled embedding for ESP32 microcontrollers
+## Generic CMake cross-compilation (`esp32`)
 
-Demonstrates a **generic CMake cross-compilation concept** that targets
-real microcontroller hardware.  The build system relies on toolchain files
-that invoke the manufacturer-supplied compiler, linker, and startup code
-(bootloader, RTOS) shipped with the ESP-IDF framework.  Using the vendor
-framework directly minimises the risk of incorrect hardware configuration
-(clock speeds, memory maps, peripheral drivers) that would arise from
-maintaining a separate, hand-crafted toolchain setup.
+The `esp32` subdirectory demonstrates a generic CMake cross-compilation
+concept that targets real microcontroller hardware.  The core idea is to
+invoke the manufacturer-supplied compiler, linker, startup code, bootloader,
+and RTOS integration that ship inside the vendor SDK (ESP-IDF) rather than
+maintaining a separate, hand-crafted toolchain configuration.  Delegating
+hardware bring-up to the vendor framework eliminates an entire class of
+misconfiguration bugs — wrong clock speeds, incorrect memory maps, missing
+peripheral initialisation — that would otherwise need to be discovered and
+fixed manually.
 
-Currently two ESP32 variants are supported:
+Although the examples here target Espressif ESP32 microcontrollers
+(ESP32-S3 and ESP32-C3), the same CMake toolchain-file pattern applies to any
+manufacturer that ships a CMake-compatible SDK.
 
-| Sub-directory | MCU | Architecture |
-|---|---|---|
-| [`esp32/s3/`](esp32/s3/README.md) | ESP32-S3 | Xtensa LX7 |
-| [`esp32/c3/`](esp32/c3/README.md) | ESP32-C3 | RISC-V |
+See [`esp32/README.md`](esp32/README.md) for an overview and the per-variant
+READMEs for step-by-step build instructions.
 
-See [`esp32/README.md`](esp32/README.md) for an overview and
-[`esp32/s3/README.md`](esp32/s3/README.md) /
-[`esp32/c3/README.md`](esp32/c3/README.md) for per-variant build instructions.
+## `mpconfigport.h` configuration templates
 
-## `mpconfigport.h` templates
-
-Each sub-example ships its own `mpconfigport.h` that selects the MicroPython
-modules and feature flags appropriate for the target.  These files are
-intended as starting-point **templates** — you can copy and adjust them for
-your own platform.  Note that the ESP32 variants require additional
-hardware-specific settings (object representation, long-integer
-implementation, NLR strategy) that differ from the Linux variant; review
-those settings carefully before porting to a new microcontroller.
+Every sub-example ships its own `mpconfigport.h` that selects the MicroPython
+modules and feature flags appropriate for the target platform.  These files
+are intended as starting-point templates that you can copy and adapt for your
+own project.  The ESP32 variants require additional hardware-specific settings
+— object representation, long-integer implementation, and NLR/GC register
+strategy — that differ from the Linux variant.  Review those settings
+carefully before porting to a new microcontroller architecture.
