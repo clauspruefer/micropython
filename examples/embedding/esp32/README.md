@@ -29,3 +29,10 @@ Two ESP32 variants are provided.
 - [`c3/`](c3/README.md) — ESP32-C3, RISC-V RV32IMC core, built with the `riscv32-esp-elf` toolchain.
 
 Refer to the per-variant README for dependencies and step-by-step build instructions.
+
+## Reference Implementation
+
+The classic PONG game on the ESP32-S3, featuring browser-app paddle control, uses *MicroPython* as the game rendering engine and
+a high-speed C++ web application server to handle paddle movement in real-time.
+
+Project ob GitHub: https://github.com/WEBcodeX1/micropython-as
