@@ -1,56 +1,52 @@
 # ESP32-S3 Embedding (Xtensa LX7)
 
 This example builds MicroPython as a static library (`libmicropython.a`) for
-the ESP32-S3 microcontroller using CMake and the ESP-IDF Xtensa toolchain.
+the ESP32-S3 microcontroller.  It uses CMake together with the ESP-IDF Xtensa
+cross-compilation toolchain.
 
 ## Dependencies
 
-The following tools must be installed before building.
-
-- **ESP-IDF** — install via the
-  [Espressif IDF installer](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/get-started/).
-  The `xtensa-esp-elf` cross-compiler must be present under
-  `~/.espressif/tools/xtensa-esp-elf/`.
-- **CMake 3.16 or later** — available through your distribution's package
-  manager or the IDF installer.
-- **MicroPython source tree** — this example is part of the MicroPython
-  repository and must be built from within it.
+ESP-IDF must be installed using the
+[Espressif IDF installer](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/get-started/)
+before building.  The `xtensa-esp-elf` cross-compiler is installed by the IDF
+installer under `~/.espressif/tools/xtensa-esp-elf/`.  CMake 3.16 or later is
+also required and is available through the IDF installer or your distribution's
+package manager.
 
 ## Implementation details
 
 `mpconfigport.h` enables `MICROPY_PY_MATH`, `MICROPY_PY_JSON`, and
-`MICROPY_EMBED_EXEC_STR_FUNCTION`.  It sets `MICROPY_OBJ_REPR_A` and
-`MICROPY_LONGINT_IMPL_MPZ` for the Xtensa ABI, and enables
-`MICROPY_NLR_SETJMP` together with `MICROPY_GCREGS_SETJMP` for
-setjmp-based exception handling, which is required on Xtensa targets where
-the compiler does not expose machine registers to the GC scanner directly.
+`MICROPY_EMBED_EXEC_STR_FUNCTION`.  `MICROPY_OBJ_REPR_A` and
+`MICROPY_LONGINT_IMPL_MPZ` are set for the Xtensa ABI.  `MICROPY_NLR_SETJMP`
+and `MICROPY_GCREGS_SETJMP` are enabled because the Xtensa compiler does not
+expose machine registers to the GC scanner directly, making setjmp-based
+exception handling and register scanning necessary.
 
-`CMakeLists.txt` collects all embed-package `.c` sources and compiles them
-into a static library with `-O3 -mlongcalls`.  The installed artefacts are
-placed in `/usr/local/lib/esp32s3` (library) and
-`/usr/local/include/esp32s3` (public header).
+`CMakeLists.txt` compiles all embed-package `.c` sources into a static library
+with `-O3 -mlongcalls` and installs the result to `/usr/local/lib/esp32s3`
+with the public header to `/usr/local/include/esp32s3`.
 
-`xtensa-cross.cmake.tpl` is a CMake toolchain template.
-`adjust-cross-build.sh` auto-detects the installed `xtensa-esp-elf` toolchain
-version and writes the final `xtensa-cross.cmake` from the template.
+`xtensa-cross.cmake.tpl` is the CMake toolchain template.
+`adjust-cross-build.sh` queries the installed `xtensa-esp-elf` toolchain
+version and writes the resolved `xtensa-cross.cmake` from that template before
+the CMake configure step.
 
-## Steps to compile
+## Building
 
 ```bash
 # 1. Generate the MicroPython embed package (run from within this directory)
 make -f micropython_embed.mk
 
-# 2. Prepare the CMake toolchain file
+# 2. Resolve and write the CMake toolchain file
 ./adjust-cross-build.sh
 
 # 3. Configure and build
 cmake -B build -DCMAKE_TOOLCHAIN_FILE=./xtensa-cross.cmake .
 cmake --build build
 
-# 4. (Optional) Install the library and header for use by other projects
+# 4. (Optional) Install the library and header
 cmake --install build
 ```
 
-After a successful build, `build/libmicropython.a` can be linked into your
-ESP32-S3 application together with
-`micropython_embed/port/micropython_embed.h`.
+The resulting `build/libmicropython.a` can be linked into an ESP32-S3
+application alongside `micropython_embed/port/micropython_embed.h`.
