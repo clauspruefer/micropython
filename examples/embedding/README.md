@@ -1,37 +1,51 @@
-Example of embedding MicroPython in a standalone C application
-==============================================================
+# MicroPython Embedding Examples
 
-This directory contains a simple example of how to embed MicroPython in an
-existing C application.
+This directory contains examples showing how to embed *MicroPython* in host applications.
 
-A C application is represented here by the file `main.c`.  It executes two
-simple Python scripts which print things to the standard output.
+- [`linux/`](linux/) — A simple embedding example for a standalone Linux C application.
+- [`linux-fc/`](linux-fc/) — Demonstrates executing a MicroPython function directly from a C/C++ host application via a function-call API.
+- [`esp32/`](esp32/) — CMake-based cross-compilation utilizing the ESP-IDF framework's native cross-compiler toolchain (C/C++).
 
-Building the example
---------------------
+## 1. CMake Cross-Compilation For Microcontrollers
 
-First build the embed port using:
+This setup demonstrates a generic *CMake* cross-compilation pattern for
+embedding *MicroPython* on microcontroller hardware. The core concept is to build
+directly inside the manufacturer's SDK so that the vendor-supplied toolchain,
+linker scripts, bootloader, startup code, and RTOS integration are used as-is.
+This pattern is universally applicable to any SDK that supports *CMake*.
 
-    $ make -f micropython_embed.mk
+By establishing this architecture, developers achieve **main-loop independent**
+*MicroPython* integration, allowing the host C/C++ application to maintain absolute
+control over the primary execution cycle. Furthermore, this foundation seamlessly
+supports the **Function-call Embedding** approach described below, enabling 
+fine-grained, direct C/C++ control over *MicroPython* execution on any 
+microcontroller target.
 
-This will generate the `micropython_embed` directory which is a self-contained
-copy of MicroPython suitable for embedding.  The .c files in this directory need
-to be compiled into your project, in whatever way your project can do that.  The
-example here uses make and a provided `Makefile`.
+Currently, the `esp32` subdirectory serves as the initial example using the
+*Espressif ESP-IDF* framework. More CMake-based examples for other architectures
+will follow.
 
-To build the example project, based on `main.c`, use:
+See the subdirectory-specific READMEs (e.g., [`esp32/README.md`](esp32/README.md))
+for an overview and step-by-step build instructions.
 
-    $ make
+## 2. Function-call Embedding (`linux-fc`)
 
-That will create an executable called `embed` which you can run:
+The `linux-fc` example shows how to use a *Boost.Python*-style **function-call API**
+which has been added recently to the *MicroPython* embed port. Enabling
+`MICROPY_EMBED_EXEC_STR_FUNCTION` in `mpconfigport.h` exposes the
+`mp_embed_exec_string_function` function, which allows a C host to execute a
+named Python function with a string argument, and receive the return value back as
+a C string — without a filesystem, REPL, or separate interpreter process.
+This pattern is applicable to any platform, including Linux and bare-metal microcontrollers.
 
-    $ ./embed
+See [`linux-fc/README.md`](linux-fc/README.md) for build instructions.
 
-Out of tree build
------------------
+## 3. `mpconfigport.h` Configuration
 
-This example is set up to work out of the box, being part of the MicroPython
-tree.  Your application will be outside of this tree, but the only thing you
-need to do for that is to change `MICROPYTHON_TOP` (found in `micropython_embed.mk`)
-to point to the location of the MicroPython repository.  The MicroPython
-repository may, for example, be a git submodule in your project.
+Every sub-example ships its own `mpconfigport.h` that selects the *MicroPython*
+feature flags and modules appropriate for the target.  These files are
+intended as starting-point templates.  The *ESP32* variants contain additional
+hardware-specific settings — object representation, long-integer
+implementation, and NLR/GC register strategy — that do not apply to Linux.
+These settings must be reviewed and adjusted whenever the example is ported to
+a different microcontroller architecture.
