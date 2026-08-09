@@ -1,7 +1,6 @@
 # MicroPython Embedding Examples
 
 This directory contains examples showing how to embed *MicroPython* in host applications.
-The examples cover three approaches:
 
 - [`linux/`](linux/) — A simple embedding example for a standalone C application.
 - [`linux-fc/`](linux-fc/) — Demonstrates executing a MicroPython function directly from a C/C++ host application via a function-call API.
