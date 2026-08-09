@@ -45,9 +45,12 @@ git clone https://github.com/micropython/micropython.git
 
 ## Implementation Details
 
-The following hardware ...
+The following hardware settings are applied for this build:
 
+- `MICROPY_OBJ_REPR` to `MICROPY_OBJ_REPR_A`
 - `MICROPY_LONGINT_IMPL` to `MICROPY_LONGINT_IMPL_MPZ`
+- `MICROPY_NLR_SETJMP`
+- `MICROPY_GCREGS_SETJMP`
 
 MicroPython features enabled for this build:
 
@@ -56,8 +59,7 @@ MicroPython features enabled for this build:
 - `MICROPY_EMBED_EXEC_STR_FUNCTION`
 
 The compiler flags `-O3` for performance and `-mlongcalls` are enabled.
-Set `-Og` for debugging to retain useful debug information while keeping
-the code reasonably optimised.
+Set `-Og` for debugging to retain useful debug information while keeping the code reasonably optimised.
 
 ## Building / Installing
 
