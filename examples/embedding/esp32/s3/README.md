@@ -105,8 +105,16 @@ The static library and the header file is installed here:
 
 ## ESP-IDF Project Integration
 
+Once the static library is installed, integrating *MicroPython* into an ESP-IDF component requires
+two steps: linking the library in the component's `CMakeLists.txt` and exposing the C API to your
+C++ source files via a wrapper header.
 
-1. CMake
+1. **CMake — linking the static library**
+
+   Register your component as usual with `idf_component_register`, then declare
+   `libmicropython.a` as a pre-built imported static library and link it privately to the component.
+   This makes all MicroPython C-API symbols available to your component's source files without
+   leaking them into other components.
 
 ```
 idf_component_register(
@@ -121,7 +129,12 @@ set_property(TARGET micropython_lib PROPERTY IMPORTED_LOCATION /usr/local/lib/es
 target_link_libraries(${COMPONENT_LIB} PRIVATE micropython_lib)
 ```
 
-2. C++ Header Example
+2. **C++ wrapper header — exposing the C API**
+
+   Because MicroPython's public API is written in C, it must be wrapped in an `extern "C"` block
+   when included from C++ translation units. Create a dedicated header (e.g. `Micropython.h`) in
+   your component that wraps the installed embed header. Any `.cpp` file that needs to call
+   MicroPython's C-API then includes this wrapper instead of the embed header directly.
 
 ```
 #pragma once
